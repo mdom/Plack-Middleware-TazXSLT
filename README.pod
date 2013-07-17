@@ -26,7 +26,7 @@ instruction with a target of I<modxslt-stylesheet>, a type of I<text/xsl>:
 
   <?modxslt-stylesheet 
     type="text/xsl" 
-    href="http://$HEADER[Host]$HEADER[X-Taz-Base]local.xsl" ?>
+    href="http://$HEADER[Host]/$HEADER[X-Taz-Base]/base.xsl" ?>
 
 All occurences of $HEADER[] in its I<href> attribute are replaced the
 the values from the backends http reponse.
@@ -34,8 +34,7 @@ the values from the backends http reponse.
 =head1 SYNOPSIS
 
   my $app = builder {
-    enable "XSLT";
-    enable "Unbuffer";
+    enable "TazXSLT";
     Plack::App::Proxy->new( backend => 'LWP', remote => 'http://example.com/ )->to_app;
   };
 
