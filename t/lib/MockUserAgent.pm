@@ -1,7 +1,6 @@
+package MockUserAgent;
 use strict;
 use warnings;
-
-package Plack::Test::MockUserAgent;
 
 use Carp;
 use HTTP::Request;

@@ -5,7 +5,9 @@ use Plack::Builder;
 use FindBin qw($Bin);
 use HTTP::Request::Common;
 use Plack::Test;
-use Plack::Test::MockUserAgent;
+
+use lib "$Bin/lib";
+use MockUserAgent;
 
 sub read_file {
 	my $file = shift;
@@ -45,7 +47,7 @@ my $backend = sub {
 my $app = builder {
     enable "NullLogger";
     enable "SimpleLogger";
-    enable "TazXSLT", user_agent => Plack::Test::MockUserAgent->new( $backend );
+    enable "TazXSLT", user_agent => MockUserAgent->new( $backend );
     $backend;
 };
 
