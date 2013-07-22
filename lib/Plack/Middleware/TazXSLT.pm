@@ -286,9 +286,9 @@ Plack::Middleware::TazXSLT - transform xml documents by applying xsl stylesheets
 Plack::Middleware::TazXSLT is an plack aware middleware that transforms
 xml documents by applying xsl stylesheets on the fly. It was developed to
 serve an replacement for the L<http://modxslt.org/> as its development
-seems stalled for a long time. I say replacement but it's actually not
-really a drop in alternative for modxslt, as this module just implements
-the features L<http://taz.de> used at the time.
+seems stalled for a long time. When using the word replacement please
+keep in mind that it is not really a drop in alternative for modxslt,
+as it just implements a very basic subset of modxslts functionality.
 
 Every time the plack backend return a response to
 Plack::Middleware::TazXSLT it checks if the response is successful,
@@ -327,10 +327,11 @@ HTTP user agent to fetch the the necessary stylesheets. Defaults to
 an LWP::UserAgent with its timeout set to I<timeout> seconds and act
 according to the environment variables HTTP_PROXY and HTTPS_PROXY.
 
-It is possible to provide an useragent object of another class as long as
-it response to a call of I<get> and returns an object provides the method
-calls I<is_redirect>, I<is_success>, I<content_length>, I<content_length>,
-I<content_is_xml> and behaves semantically similar to LWPs HTTP::Reponse.
+It is possible to provide an useragent object of another class as long
+as it respond to a call of I<get> and returns an object that provides
+the method calls I<is_redirect>, I<is_success>, I<content_length>,
+I<content_length>, I<content_is_xml> and behaves semantically similar
+to LWPs HTTP::Reponse.
 
 =item xml_parser
 
@@ -371,15 +372,13 @@ characters into one space character.
 
 =item TAZ_XSLT_PROFILE
 
-If this environment variable is set to a true value in the perl sense,
-every call to apply_transformation is profiled and the result will be
-printed to wherever I<$env-E<gt>{'psgi.errors'}> is pointing. 
+If this environment variable is set to a true value, every call to
+apply_transformation is profiled and the result will be printed to
+wherever I<$env-E<gt>{'psgi.errors'}> is pointing.
 
   [http://example.com] xslt-processing-time: 0.01245
 
 =back
-
-=head1 LIMITATIONS
 
 =head1 SEE ALSO
 
