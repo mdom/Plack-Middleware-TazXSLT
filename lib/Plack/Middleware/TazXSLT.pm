@@ -291,24 +291,24 @@ really a drop in alternative for modxslt, as this module just implements
 the features L<http://taz.de> used at the time.
 
 Every time the plack backend return a response to
-Plack::Middleware::TazXSLT it checks if the response is sucessfull,
-not a redirect, not a HEAD request, has content and is acutally a xml
+Plack::Middleware::TazXSLT it checks if the response is successful,
+not a redirect, not a HEAD request, has content and is actually a xml
 document. If all that applies, it parses the xml document and applies
 the supplied stylesheet to it.
 
 There are two way to communicate which stylesheet to use. If
-the reponse returned by the application contains the HTTP header
+the response returned by the application contains the HTTP header
 X-Taz-XSLT-Stylesheet, it's value is expected to be an URL pointing to
-an XSLT stylesheet which is than downloaded and applied. If the reponse
+an XSLT stylesheet which is than downloaded and applied. If the response
 misses this header, Plack::Middleware::TazXSLT tries to find a processing
-instruction with a target of I<modxslt-stylesheet>, a type of I<text/xsl>:
+instruction of type of I<text/xsl>:
 
   <?modxslt-stylesheet 
     type="text/xsl" 
     href="http://$HEADER[Host]/$HEADER[X-Taz-Base]/base.xsl" ?>
 
-All occurences of $HEADER[] in its I<href> attribute are replaced the
-the values from the backends http reponse.
+All occurrences of $HEADER[] in its I<href> attribute are replaced the
+the values from the backends http response.
 
 =head1 SYNOPSIS
 
@@ -346,7 +346,7 @@ An instance of XML::LibXSLT. Defaults to the following simple call:
 
 =item name
 
-A string with is accessable via the xslt vairbale
+A string with is accessible via the xslt variable
 I<modxslt-name>. Defaults to I<tazxslt>.
 
 =item timeout
