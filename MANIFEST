@@ -9,3 +9,5 @@ t/errors.t
 t/replace_headers.t
 t/transform.t
 t/lib/MockUserAgent.pm
+META.yml
+META.json
