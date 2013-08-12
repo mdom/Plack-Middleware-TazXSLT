@@ -6,7 +6,11 @@ use HTTP::Request::Common;
 use Plack::Test;
 use Test::More;
 use Plack::Builder;
-use Plack::Test::MockUserAgent;
+
+use FindBin qw($Bin);
+use lib "$Bin/lib";
+use MockUserAgent;
+
 
 my $backend = sub {
     my $env     = shift;
@@ -54,7 +58,7 @@ my $app = builder {
             return $app->($env);
         };  
     }; 
-    enable "TazXSLT", user_agent => Plack::Test::MockUserAgent->new($backend);
+    enable "TazXSLT", user_agent => MockUserAgent->new($backend);
     $backend;
 };
 
