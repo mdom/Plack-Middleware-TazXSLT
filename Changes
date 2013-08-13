@@ -1,5 +1,9 @@
 Revision history for perl module Plack::Middleware::TazXSLT
 
-0.49 2013-07-17T15:52+02:00
+0.50 2013-07-13T13:23+02:00
+
+     - test_requires was introduced in Module::Build 0.4004
+
+0.49 2013-08-12T15:52+02:00
 
      - errors.t still used MockUserAgent in lib/ and not t/lib
