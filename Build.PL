@@ -4,8 +4,8 @@ use warnings;
 use Module::Build 0.3601;
 
 my %module_build_args = (
-    'build_requires'     => { 'Module::Build' => '0.3601' },
-    'configure_requires' => { 'Module::Build' => '0.3601' },
+    'build_requires'     => { 'Module::Build' => '0.4004' },
+    'configure_requires' => { 'Module::Build' => '0.4004' },
     'license'            => 'perl',
     'module_name'        => 'Plack::Middleware::TazXSLT',
     'meta_merge'         => {
@@ -30,6 +30,8 @@ my %module_build_args = (
     test_requires => {
         'Test::More'                => '0',
         'Test::MockObject::Extends' => '0',
+        'HTTP::Request'             => '0',
+        'Carp'                      => '0',
     },
 );
 
