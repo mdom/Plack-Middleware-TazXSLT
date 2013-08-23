@@ -4,7 +4,7 @@ use warnings;
 
 use parent qw( Plack::Middleware );
 use Plack::Util::Accessor
-  qw(user_agent xml_parser xslt_parser name timeout log_filter );
+  qw(user_agent xml_parser xslt_parser name timeout log_filter response request );
 use XML::LibXML;
 use XML::LibXSLT;
 use LWP::UserAgent;
@@ -45,19 +45,22 @@ sub call {
     my $res              = $self->unbuffer( $self->app->($env) );
     my $backend_response = HTTP::Response->from_psgi($res);
 
-    if ( !$self->is_transformable_response( $request, $backend_response ) ) {
+    $self->request( $request );
+    $self->response( $backend_response );
+
+    if ( !$self->is_transformable_response() ) {
         $backend_response->header( x_taz_mode => 'proxy' );
         return $backend_response->to_psgi;
     }
 
     my $content_type;
     my $response = try {
-        my $xml_dom = $self->parse_xml( $backend_response->content );
-        my $xsl_uri = try { $self->find_pi( $request, $xml_dom ) };
+        my $xml_dom = $self->parse_xml();
+        my $xsl_uri = try { $self->find_pi( $xml_dom ) };
 
         if ( !$xsl_uri ) {
-            $backend_response->header( x_taz_mode => 'proxy' );
-            return $backend_response;
+            $self->response->header( x_taz_mode => 'proxy' );
+            return $self->response;
         }
 
         $xsl_uri = URI->new_abs( $xsl_uri, $request->uri );
@@ -68,7 +71,7 @@ sub call {
 
         my $xslt_dom = $self->parse_stylesheet($xslt_response);
 
-        $self->register_elements( $xslt_dom, $xml_dom, $request );
+        $self->register_elements( $xslt_dom, $xml_dom );
 
         my $result;
         my ( $stdout, $stderr ) = do {
@@ -105,10 +108,10 @@ sub call {
         $backend_response->content_length(
             do { use bytes; length $content }
         );
-        $backend_response->content_type($content_type);
-        $backend_response->content($content);
-        $backend_response->header( x_taz_mode => 'transform' );
-        return $backend_response;
+        $self->response->content_type($content_type);
+        $self->response->content($content);
+        $self->response->header( x_taz_mode => 'transform' );
+        return $self->response;
     }
     catch {
         $env->{'psgi.errors'}->print("[$uri] $_");
@@ -161,20 +164,21 @@ sub get_stylesheet {
 }
 
 sub is_transformable_response {
-    my ( $self, $request, $response ) = @_;
+    my $self = shift;
 
     return 0
-      if $response->is_redirect
-          || !$response->is_success
-          || $request->method eq 'HEAD'
-          || ( defined $response->content_length
-              && $response->content_length == 0 )
-          || !$response->content_is_xml;
+      if $self->response->is_redirect
+          || !$self->response->is_success
+          || $self->request->method eq 'HEAD'
+          || ( defined $self->response->content_length
+              && $self->response->content_length == 0 )
+          || !$self->response->content_is_xml;
     return 1;
 }
 
 sub parse_xml {
-    my ( $self, $body ) = @_;
+    my $self = shift;
+    my $body = $self->response->content;
     my $xml_dom = try {
         $self->xml_parser->parse_string($body);
     }
@@ -186,10 +190,10 @@ sub parse_xml {
 }
 
 sub find_pi {
-    my ( $self, $request, $dom ) = @_;
+    my ( $self, $dom ) = @_;
     my $xsl_uri;
-    if ( $request->header('X-Taz-XSLT-Stylesheet') ) {
-        $xsl_uri = $request->header('X-Taz-XSLT-Stylesheet');
+    if ( $self->request->header('X-Taz-XSLT-Stylesheet') ) {
+        $xsl_uri = $self->request->header('X-Taz-XSLT-Stylesheet');
     }
     else {
         my $stylesheet_href;
@@ -201,14 +205,14 @@ sub find_pi {
             ($stylesheet_href) = ( $pi_str =~ m{href="([^"]*)"} );
         }
         if ($stylesheet_href) {
-            $xsl_uri = replace_header( $request, $stylesheet_href );
+            $xsl_uri = replace_header( $self->request, $stylesheet_href );
         }
     }
     return $xsl_uri;
 }
 
 sub register_elements {
-    my ( $self, $xslt_dom, $xml_dom, $request ) = @_;
+    my ( $self, $xslt_dom, $xml_dom ) = @_;
 
     $xslt_dom->register_element( 'http://www.mod-xslt2.com/ns/1.0',
         'header-set', sub { return; } );
@@ -219,7 +223,7 @@ sub register_elements {
         sub {
             my $string = $_[2]->getAttribute("select");
             return XML::LibXML::Text->new(
-                replace_header( $request, $string ) );
+                replace_header( $self->request, $string ) );
         }
     );
     return;
