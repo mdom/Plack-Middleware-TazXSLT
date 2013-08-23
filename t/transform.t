@@ -17,26 +17,12 @@ sub read_file {
 my $backend = sub {
     my $env     = shift;
     my $request = Plack::Request->new($env);
-    my $uri     = $request->uri;
-    if ($uri eq 'http://example.com/01.xml') {
+    my $path     = $request->uri->path;
+    if ( -e  "$Bin/documents/$path" ) {
         return [
             200,
             [ 'Content-Type', 'text/xml' ],
-            [ read_file("$Bin/documents/01.xml") ]
-        ];
-    }
-    elsif ($uri eq 'http://example.com/01_no_pi.xml') {
-        return [
-            200,
-            [ 'Content-Type', 'text/xml' ],
-            [ read_file("$Bin/documents/01_no_pi.xml") ]
-        ];
-    }
-    elsif ($uri eq 'http://example.com/01.xsl') {
-        return [
-            200,
-            [ 'Content-Type', 'text/xml' ],
-            [ read_file("$Bin/documents/01.xsl") ]
+            [ read_file("$Bin/documents/$path") ]
         ];
     }
     else {
