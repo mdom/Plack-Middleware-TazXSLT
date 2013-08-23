@@ -53,4 +53,12 @@ test_psgi $app, sub {
     is( $res->content_length, 26);
 };
 
+test_psgi $app,  sub { 
+	my $cb  = shift;
+        my $res = $cb->( GET 'http://example.com/change_http_status.xml', [ Host => 'www.example.com' ] );
+    	is( $res->code, 204 );
+    	is( $res->content, qq{<?xml version="1.0"?>\nbar\n} );
+    	is( $res->content_length, 26 );
+};
+
 done_testing();
