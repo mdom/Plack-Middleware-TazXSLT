@@ -1,5 +1,9 @@
 Revision history for perl module Plack::Middleware::TazXSLT
 
+0.52 2013-08-26T16:38+02:00
+
+     - header-set is still used in production, reversed refactoring
+
 0.51 2013-08-23T15:37+02:00
 
      - new xslt functions header and code
