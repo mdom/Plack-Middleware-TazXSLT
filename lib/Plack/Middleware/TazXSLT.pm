@@ -36,6 +36,7 @@ sub prepare_app {
     $self->log_filter( \&parse_libxml_error ) unless defined $self->log_filter;
     $self->user_agent( $self->build_user_agent() )
       unless defined $self->user_agent;
+    return;
 }
 
 sub call {
