@@ -1,5 +1,9 @@
 Revision history for perl module Plack::Middleware::TazXSLT
 
+0.54 2014-08-07
+
+     - forget to include README in Manifest before uploading
+
 0.53 2014-08-07
 
      - added README
