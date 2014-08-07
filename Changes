@@ -1,5 +1,10 @@
 Revision history for perl module Plack::Middleware::TazXSLT
 
+0.53 2014-08-07
+
+     - added README
+     - explicit return from prepare_app
+
 0.52 2013-08-26T16:38+02:00
 
      - header-set is still used in production, reversed refactoring

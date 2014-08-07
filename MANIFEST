@@ -11,5 +11,6 @@ t/errors.t
 t/replace_headers.t
 t/transform.t
 t/lib/MockUserAgent.pm
+README
 META.yml
 META.json
