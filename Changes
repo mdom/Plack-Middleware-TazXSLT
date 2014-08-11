@@ -1,5 +1,9 @@
 Revision history for perl module Plack::Middleware::TazXSLT
 
+0.55 2014-08-11
+
+     - register_element was added in XML::LibXSLT 1.72
+
 0.54 2014-08-07
 
      - forget to include README in Manifest before uploading

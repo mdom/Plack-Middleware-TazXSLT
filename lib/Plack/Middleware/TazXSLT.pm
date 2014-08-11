@@ -19,7 +19,7 @@ use Plack::Util;
 
 use constant TAZ_XSLT_PROFILE => $ENV{TAZ_XSLT_PROFILE};
 
-our $VERSION = '0.54';
+our $VERSION = '0.55';
 
 sub HTTP::Response::to_psgi {
     my ($self) = @_;
