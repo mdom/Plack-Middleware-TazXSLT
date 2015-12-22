@@ -15,8 +15,8 @@ my %module_build_args = (
     'requires' => {
         'Capture::Tiny'       => '0',
         'LWP::UserAgent'      => '0',
-        'Plack::Request'      => '0',
-        'Plack::Response'     => '0',
+        'Plack::Request'      => '!= 1.0038',
+        'Plack::Response'     => '!= 1.0038',
         'Plack::Util'         => '0',
         'Plack::Middleware'   => '0',
         'Try::Tiny'           => '0',
