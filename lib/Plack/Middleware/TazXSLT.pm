@@ -215,14 +215,6 @@ sub find_pi {
 sub register_elements {
     my ( $self, $xslt_dom, $xml_dom ) = @_;
 
-    $xslt_dom->register_function(
-        'http://www.mod-xslt2.com/ns/1.0',
-        'header-set',
-        sub {
-            $self->response->header(@_);
-        },
-    );
-
     $xslt_dom->register_function( 'http://taz.de/xmlns/tazxslt/http_response',
         'header',
 	sub { 
